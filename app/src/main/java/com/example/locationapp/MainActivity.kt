@@ -55,16 +55,19 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
     val location = viewModel.location.value
 
     // This requestPermissionLauncher gives us UI for asking permission to the user and we can either request single permission or multiple permissions
+    // this is checking whether we are having permission or not
     val requestPermissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) {
         permissions ->
             if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 // When we ask for permission and the user gives us the permission then we write the code that will be executed in that case here
                 locationUtils.requestLocationUpdates(viewModel)
             } else {
+                // A rationale is a library that is used to manage permission request
+                // So rationale shows the UI to get permission, we ask for permission using rationale not using requestPermissionLauncher
                 // If user declines our permission we then give them reason for taking permission to run app using rationale
                 // rationale helps us to ask again for permission if we are denied permission for the first time but it is only limited to one time
                 // means we can only ask again for permission only once after getting rejected for first time
-                // Rationale basically helps us to ask for permission a second time if we are denied for the first time
+                // Rationale basically helps us to ask for permission
                 val rationaleRequired = ActivityCompat.shouldShowRequestPermissionRationale(
                     context as MainActivity,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -75,6 +78,7 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
 
                 if (rationaleRequired) {
                     // If user declines permission for first time show the user this toast and now we can ask for permission one more time
+                    // in this case rationaleRequired is set to true
                     Toast.makeText(
                         context,
                         "Location Permission required to run app",
@@ -82,6 +86,7 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
                     ).show()
                 } else {
                     // If user declines permission for the second time then show this toast and now we can't ask for permission again, user needs to go to settings to turn on permission
+                    // in this case rationaleRequired is set to false
                     Toast.makeText(context, "Turn on location from setting", Toast.LENGTH_LONG)
                         .show()
                 }
