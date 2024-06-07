@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MyApp(viewModel: LocationViewModel) {
-    val context = LocalContext.current  // Context of the current screen we are a
+    val context = LocalContext.current  // Context of the current screen we are at
     val locationUtils = LocationUtils(context)
     LocationDisplay(locationUtils = locationUtils, context = context, viewModel)
 }
