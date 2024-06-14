@@ -41,7 +41,7 @@ class LocationUtils(private val context: Context) {
 
     // Finding out the address from the location obtained by requestLocationUpdates
     fun reverseGeocodeLocation(location: LocationData): String {
-        val geocoder = Geocoder(context, Locale.getDefault())   // Geocoder is used to give us address in a certain format, it is used to obtain address from the coordinates
+        val geocoder = Geocoder(context, Locale.getDefault())   // Geocoder is used to give us address in a certain format, it is used to obtain address from the coordinates, Locale gives us format of the address(getDefault() means the system default)
         val coordinates = LatLng(location.latitude, location.longitude)     // We obtain coordinates by using the latitude and longitude
         val addresses: MutableList<Address>? = geocoder.getFromLocation(coordinates.latitude, coordinates.longitude, 1)     // This provides us with a list of addresses decoded by geocoder using the coordinates
 
