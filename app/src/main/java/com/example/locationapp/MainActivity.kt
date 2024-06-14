@@ -52,12 +52,18 @@ fun MyApp(viewModel: LocationViewModel) {
 @Composable
 fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: LocationViewModel) {
 
-    val location = viewModel.location.value
+    val location =
+        viewModel.location.value     // Taking the location value from the viewModel to ensure abstraction
+
+    val address =
+        location?.let {   // Using the location and giving it to the function we created to get address
+            locationUtils.reverseGeocodeLocation(location)
+        }
 
     // This requestPermissionLauncher gives us UI for asking permission to the user and we can either request single permission or multiple permissions
     // this is checking whether we are having permission or not
-    val requestPermissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) {
-        permissions ->
+    val requestPermissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true && permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 // When we ask for permission and the user gives us the permission then we write the code that will be executed in that case here
                 locationUtils.requestLocationUpdates(viewModel)
@@ -71,7 +77,7 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
                     context as MainActivity,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) || ActivityCompat.shouldShowRequestPermissionRationale(
-                    context as MainActivity,
+                    context,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
 
@@ -98,7 +104,7 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
         verticalArrangement = Arrangement.Center
     ) {
         if (location != null) {
-            Text(text = "Address: ${location.latitude}, ${location.longitude}")
+            Text(text = "Address: ${location.latitude}, ${location.longitude}\n $address")
         } else {
             Text(text = "Location not available")
         }
@@ -107,7 +113,7 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
                 // We have location
                 locationUtils.requestLocationUpdates(viewModel)
             } else {
-                // Here we start the launcher for the first time, as we start the app for first time we don't have any permissions so we are asking for permission
+                // Here we start the launcher as we don't have any permissions so we are asking for permission
                 // via requestPermissionLauncher for location(fine and coarse)
                 requestPermissionLauncher.launch(
                     arrayOf(
