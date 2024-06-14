@@ -63,8 +63,7 @@ fun LocationDisplay(locationUtils: LocationUtils, context: Context, viewModel: L
                 locationUtils.requestLocationUpdates(viewModel)
             } else {
                 // A rationale is a library that is used to manage permission request
-                // So rationale shows the UI to get permission, we ask for permission using rationale not using requestPermissionLauncher
-                // If user declines our permission we then give them reason for taking permission to run app using rationale
+                // If user declines our permission the first time we then give them reason for taking permission using rationale
                 // rationale helps us to ask again for permission if we are denied permission for the first time but it is only limited to one time
                 // means we can only ask again for permission only once after getting rejected for first time
                 // Rationale basically helps us to ask for permission
